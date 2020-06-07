@@ -1,30 +1,73 @@
-import React, { useEffect } from 'react';
-import { Image, FlatList, Text, View, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation, useFocusEffect, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import logo from '../../assets/logo.png';
 
-import { Container, Header } from './styles';
+import { 
+    Container,
+    Header,
+    List,
+    Deck,
+    DeckContainer,
+    DeckColorImage,
+    DeckColorName,
+    DeckName,
+    Arrow
+} from './styles';
 
 export default function Main() {
     const navigation = useNavigation();
+    const [decks, setDecks] = useState([]);
+    const isFocused = useIsFocused();
+
+    const images = {
+        red: require('../../assets/red.png'),
+        green: require('../../assets/green.png'),
+        white: require('../../assets/white.png'),
+        black: require('../../assets/black.png'),
+        blue: require('../../assets/blue.png'),
+    }
+
+    const totalDecks = useMemo(() => {
+        return decks.length
+    }, [decks]);
+
+    const loadDeckCallback = useCallback(async () => {
+        try {
+            const response = await AsyncStorage.getItem('@decks');
+            if (response) {
+                let decksArray = JSON.parse(response);    
+                setDecks(decksArray);
+                console.log('decks > ', decksArray);
+            }
+        } catch (err) {
+            Alert.alert('ops', 'Ocorreu um erro ao carregar os decks');
+            console.log(err);
+        }
+    }, []);
+
+    useFocusEffect(() => {
+        console.log('focus, ', isFocused);
+
+        // loadDeckCallback();
+    }, [isFocused]);
 
     useEffect(() => {
-        async function loadDecks() {
-            try {
-                const response = await AsyncStorage.getItem('@deckInfo');
-                console.log('decks >> ', response);
-            } catch (err) {
-                
-            }
-        }
-
-        loadDecks();
+        loadDeckCallback();
     }, []);
 
     function goToAddDeck() {
         navigation.navigate('Deck');
+    }
+    
+    function goToEditDeck(deck) {
+        navigation.navigate('Deck', { deck });
+    }
+
+    function goToAddCard() {
+        navigation.navigate('Card');
     }
 
     return (
@@ -33,7 +76,7 @@ export default function Main() {
                 <Image source={logo} />
 
                 <Text style={{ fontSize: 15, color: '#737380' }}>
-                    Você tem 8 decks
+                    Você tem {totalDecks} decks
                 </Text>
             </Header>
 
@@ -54,19 +97,30 @@ export default function Main() {
                 Aqui você pode montar seu deck com as cartas que você quiser
             </Text>
 
-            <FlatList
-                style={{ marginTop: 32 }}
-                data={[1, 2, 3]}
-                keyExtractor={deck => String(deck)}
-                renderItem={({ item }) => (
-                    <View>
-                        <Text>123</Text>
-                    </View>
+            <List
+                data={decks}
+                keyExtractor={deck => String(deck.id)}
+                showsVerticalScrollIndicator={false}
+                onRefresh={() => {}}
+                refreshing={false}
+                renderItem={({ item: deck }) => (
+                    <Deck onPress={() => goToEditDeck(deck)}>
+                        <DeckContainer>
+                            <DeckColorName>
+                                <DeckColorImage source={images[deck.color]} />
+                                <DeckName>{deck.deckName}</DeckName>
+                            </DeckColorName>
+                            <Arrow name="arrow-right" size={20} />
+                        </DeckContainer>
+                    </Deck>
                 )}
             />
 
             <TouchableOpacity onPress={goToAddDeck}>
                 <Text>Adicionar deck</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goToAddCard}>
+                <Text>Adicionar card</Text>
             </TouchableOpacity>
         </Container>
     );

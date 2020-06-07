@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Image, TouchableOpacity, View, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { Image, TouchableOpacity, View, TextInput, Alert } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -15,66 +15,115 @@ import { Container, Header, Body, List, Cor, CorView, AddButton, AddButtonText, 
 
 export default function Deck() {
     const navigation = useNavigation();
-    const [nomeDeck, setNomeDeck] = useState('');
-    const [corSelected, setCorSelected] = useState(null);
-    const [cores, setCores] = useState([
-        {
-            id: 'black',
-            image: black,
-            selected: false
-        },
-        {
-            id: 'white',
-            image: white,
-            selected: false
-        },
-        {
-            id: 'blue',
-            image: blue,
-            selected: false
-        },
-        {
-            id: 'red',
-            image: red,
-            selected: false
-        },
-        {
-            id: 'green',
-            image: green,
-            selected: false
+    const route = useRoute();
+    const [deckName, setDeckname] = useState('');
+    const [colors, setColors] = useState();
+
+    const deckToEdit = route.params?.deck;
+
+    useEffect(() => {
+        let colorAvailable = [
+            {
+                id: 'black',
+                image: black,
+                selected: false
+            },
+            {
+                id: 'white',
+                image: white,
+                selected: false
+            },
+            {
+                id: 'blue',
+                image: blue,
+                selected: false
+            },
+            {
+                id: 'red',
+                image: red,
+                selected: false
+            },
+            {
+                id: 'green',
+                image: green,
+                selected: false
+            }
+        ];
+
+        if (deckToEdit) {
+            setDeckname(deckToEdit.deckName);
+            colorAvailable = colorAvailable.map(color => {
+                return {
+                    ...color,
+                    selected: color.id === deckToEdit.color
+                };
+            })
         }
-    ]);
+        
+        setColors(colorAvailable);
+
+    }, []);
 
     function navigateBack() {
         navigation.goBack();
     }
 
     function selectColor(color) {
-        console.log('color selecionado ', color);
-        cores.map(cor => { cor.selected = false; });
-        const cor = cores.find(x => x.id === color.id);
+        const coresNova = colors.map(cor => {
+            return {
+                ...cor,
+                selected: false
+            };
+        });
+        const cor = coresNova.find(x => x.id === color.id);
         cor.selected = true;
-        setCorSelected(color);
+
+        setColors(coresNova);
     }
 
-    function handleAdd() {
-        console.log(nomeDeck);
-        console.log(corSelected);
+    async function handleAdd() {
 
-        if (nomeDeck && corSelected) {
-            const deckInfo = {
-                nomeDeck,
-                cor: corSelected.id
-            };
-            console.log(deckInfo)
-    
+        const selectedColor = colors.find(x => x.selected);
+
+        if (deckName && selectedColor) {
+            const decksJson = await AsyncStorage.getItem('@decks');
+            const decks = decksJson ? JSON.parse(decksJson) : [];
+            const id = decks ? decks.length + 1 : 1;
             try {
-                const jsonValue = JSON.stringify(deckInfo);
-                AsyncStorage.setItem('@deckInfo', jsonValue);
+                const deckNew = {
+                    id,
+                    deckName,
+                    color: selectedColor.id,
+                    cards: []
+                };
+        
+                decks.push(deckNew);
+                
+                const jsonValue = JSON.stringify(decks);
+                AsyncStorage.setItem('@decks', jsonValue);
+
+                setDeckname('');
+                
+                const coresNova = colors.map(cor => {
+                    return {
+                        ...cor,
+                        selected: false
+                    };
+                });
+                setColors(coresNova);
+                
             } catch (err) {
-    
+                Alert.alert('ops', 'ocorreu um erro');
             }
         }
+    }
+
+    async function handleEdit() {
+        
+    }
+
+    async function limparMemoria() {
+        AsyncStorage.clear();
     }
 
     return (
@@ -90,31 +139,42 @@ export default function Deck() {
     
             <Body>
                 <View>
-                    <TextInput style={{
-                        backgroundColor: 'white',
-                        paddingHorizontal: 30,
-                        marginHorizontal: 20,
-                        borderRadius: 25
-                    }} placeholder="Nome do deck" onChangeText={setNomeDeck} />
+                    <TextInput 
+                        style={{
+                            backgroundColor: 'white',
+                            paddingHorizontal: 30,
+                            marginHorizontal: 20,
+                            borderRadius: 25
+                        }}
+                        placeholder="Nome do deck"
+                        value={deckName} 
+                        onChangeText={setDeckname} />
                     
-                    <List
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        data={cores}
-                        keyExtractor={img => String(img.id)}
-                        renderItem={({ item }) => (
-                            <Cor onPress={() => selectColor(item)}>
-                                <CorView selecionado={item.selected}>
-                                    <CorImg source={item.image} />
-                                </CorView>
-                            </Cor>
-                        )}
-                    />
+                    {colors && (
+                        <List
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            data={colors}
+                            keyExtractor={img => String(img.id)}
+                            renderItem={({ item: color }) => (
+                                <Cor onPress={() => selectColor(color)}>
+                                    <CorView selecionado={color.selected}>
+                                        <CorImg source={color.image} />
+                                    </CorView>
+                                </Cor>
+                            )}
+                        />
+                    )}
                 </View>
                 <View style={{ marginTop: 50 }}>
                     <AddButton onPress={handleAdd}>
                         <AddButtonText>
                             Adicionar
+                        </AddButtonText>
+                    </AddButton>
+                    <AddButton onPress={limparMemoria} style={{ marginTop: 50}}>
+                        <AddButtonText>
+                            limpar memoria
                         </AddButtonText>
                     </AddButton>
                 </View>
