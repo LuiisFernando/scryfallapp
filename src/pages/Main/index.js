@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation, useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import logo from '../../assets/logo.png';
@@ -38,7 +38,8 @@ export default function Main() {
         try {
             const response = await AsyncStorage.getItem('@decks');
             if (response) {
-                let decksArray = JSON.parse(response);    
+                let decksArray = JSON.parse(response);
+                setDecks([]);
                 setDecks(decksArray);
                 console.log('decks > ', decksArray);
             }
@@ -48,15 +49,11 @@ export default function Main() {
         }
     }, []);
 
-    useFocusEffect(() => {
-        console.log('focus, ', isFocused);
-
-        // loadDeckCallback();
-    }, [isFocused]);
-
     useEffect(() => {
-        loadDeckCallback();
-    }, []);
+        if (isFocused) {
+            loadDeckCallback();
+        }
+    }, [isFocused]);
 
     function goToAddDeck() {
         navigation.navigate('Deck');

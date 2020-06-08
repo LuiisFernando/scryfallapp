@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, View, TouchableOpacity, Image } from 'react-native';
+import { TextInput, View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -12,6 +12,7 @@ import { Container, Header, Body } from './styles';
 export default function Card() {
     const navigation = useNavigation();
     const [cardName, setCardName] = useState('');
+    const [cards, setCards] = useState([]);
 
     function navigateBack() {
         navigation.goBack();
@@ -19,12 +20,27 @@ export default function Card() {
 
     async function findCard() {
         try {
-            const response = await api.get(`/cards/search?q=${cardName}`);
 
-            const { id, artist, colors, name, image_uris, legalities } = response.data.data[0]
+            const response = await api.get(`cards/search?q=${cardName}`);
+            console.log('passou da request');
+            // const { id, artist, colors, name, image_uris, legalities } = response.data.data[0]
             
-            console.log(id, artist, colors, name, image_uris, legalities);
-            console.log(response);
+            // console.log(id, artist, colors, name, image_uris, legalities);
+
+            if (response.data && response.data.data.length > 0) {
+                setCards(response.data.data.map(card => {
+                    return {
+                        id: card.id,
+                        artist: card.artist,
+                        name: card.name,
+                        image_uris: card.image_uris,
+                        legalities: card.legalities
+                    }
+                }));
+            }
+
+            console.log(response.data.data[0].image_uris.normal);
+
         } catch (err) {
             console.log('erro >>> ', err);
         }
@@ -56,6 +72,20 @@ export default function Card() {
                         <Icon name="search" size={28} color="gray" />
                     </TouchableOpacity>
                 </View>
+                <FlatList 
+                    data={cards}
+                    renderItem={({ item: card }) => (
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <Image 
+                                source={{ uri: card.image_uris.normal}} 
+                                style={{
+                                    width: 175, height: 175
+                                }}
+                            />
+                            <Text>{card.name}</Text>
+                        </View>
+                    )}
+                />
             </Body>
         </Container>
     );
