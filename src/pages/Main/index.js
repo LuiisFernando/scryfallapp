@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { store } from '../../redux';
 import logo from '../../assets/logo.png';
 
 import { 
@@ -36,12 +36,11 @@ export default function Main() {
 
     const loadDeckCallback = useCallback(async () => {
         try {
-            const response = await AsyncStorage.getItem('@decks');
+            var response = store.getState().decks;
             if (response) {
-                let decksArray = JSON.parse(response);
                 setDecks([]);
-                setDecks(decksArray);
-                console.log('decks > ', decksArray);
+                setDecks(response.decks);
+                console.log('decks > ', response.decks);
             }
         } catch (err) {
             Alert.alert('ops', 'Ocorreu um erro ao carregar os decks');
@@ -56,7 +55,7 @@ export default function Main() {
     }, [isFocused]);
 
     function goToAddDeck() {
-        navigation.navigate('Deck');
+        navigation.navigate('AddDeck');
     }
     
     function goToEditDeck(deck) {
