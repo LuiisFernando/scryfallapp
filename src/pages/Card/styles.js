@@ -17,9 +17,6 @@ export const Body = styled.View`
 `;
 
 export const List = styled.FlatList`
-    
-    /* height: 50%; */
-    /* max-height: 80%; */
     z-index: 1;
 `;
 

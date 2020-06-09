@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TextInput, View, Text, TouchableOpacity, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -22,6 +22,12 @@ export default function Card() {
 
     console.log((windowHeight / 100) * 20);
 
+    useEffect(() => {
+        if (cardInfo) {
+            bottomRef.current.snapTo(1);
+        }
+    }, [cardInfo]);
+
     function navigateBack() {
         navigation.goBack();
     }
@@ -37,6 +43,13 @@ export default function Card() {
 
             if (response.data && response.data.data.length > 0) {
                 setCards(response.data.data.map(card => {
+
+                    let power = undefined;
+
+                    if (card.power && card.toughness) {
+                        power = `${card.power}/${card.toughness}`;
+                    }
+
                     return {
                         id: card.id,
                         artist: card.artist,
@@ -44,13 +57,12 @@ export default function Card() {
                         name: card.name,
                         oracle_text: card.oracle_text,
                         flavor_text: card.flavor_text,
+                        power,
                         image_uris: card.image_uris ? card.image_uris : 'semimage',
                         legalities: card.legalities
                     }
                 }));
             }
-
-            console.log(response.data.data[0].image_uris.normal);
 
         } catch (err) {
             console.log('erro >>> ', err);
@@ -58,9 +70,10 @@ export default function Card() {
     }
 
     function selectCard(card) {
-        setCardInfo(card);
-        console.log(card);
-        bottomRef.current.snapTo(1);
+        navigation.navigate('CardDetail', { card });
+        // setCardInfo(card);
+        // console.log(card);
+        // bottomRef.current.snapTo(1);
     }
 
     function closeBottomSheet() {
@@ -116,28 +129,30 @@ export default function Card() {
                     )}
                 </View>
                 
-                    <ScrollBottomSheet
-                        style={{ display: cardInfo ? 'flex' : 'none', flex: 1 }}
-                        ref={bottomRef}
-                        componentType="ScrollView"
-                        snapPoints={[200, '100%' , windowHeight - 200]}
-                        initialSnapIndex={1}
-                        renderHandle={() => (
-                            <View style={[styles.header, { display: cardInfo ? 'flex' : 'none' }]}>
-                                <>
-                                    {/* <View style={styles.panelHandle} /> */}
-                                    <TouchableOpacity onPress={() => closeBottomSheet()} style={{ backgroundColor: 'red', width: 100}}>
-                                            <Icon name="x" size={20} color="gray" />
-                                    </TouchableOpacity>
-                                </>
-                            </View>
-                        )}
-                        keyExtractor={i => i}
-                        contentContainerStyle={styles.contentContainerStyle}
-                    >
-                        {cardInfo && (
-                            <ScrollView style={{ backgroundColor: '#FFF'}}>
-                                <>
+                    {cardInfo && (
+                        <ScrollBottomSheet
+                            // style={{ display: cardInfo ? 'flex' : 'none', flex: 1 }}
+                            ref={bottomRef}
+                            componentType="ScrollView"
+                            snapPoints={[0, 50 , windowHeight - 200]}
+                            initialSnapIndex={1}
+                            scrollEnabled
+                            renderHandle={() => (
+                                <View style={styles.header}>
+                                    <>
+                                        {/* <View style={styles.panelHandle} /> */}
+                                        <TouchableOpacity onPress={() => closeBottomSheet()} style={{ backgroundColor: 'red', width: 100}}>
+                                                <Icon name="x" size={20} color="gray" />
+                                        </TouchableOpacity>
+                                    </>
+                                </View>
+                            )}
+                            // keyExtractor={i => i}
+                            contentContainerStyle={styles.contentContainerStyle}
+                        >
+                            
+                            {/* <ScrollView style={{ backgroundColor: '#FFF'}}> */}
+                                <ScrollView style={{ flex: 1, backgroundColor: 'yellow'}}>
                                     <View>
                                         <Text>{cardInfo.name}</Text>
                                         <Text>{cardInfo.type}</Text>
@@ -160,10 +175,11 @@ export default function Card() {
                                         <Image source={{ uri: cardInfo.image_uris.normal }} style={{ width: 350, height: 500 }} />
                                     )}
                                     <Text>{cardInfo.artist}</Text>
-                                </>
-                            </ScrollView>
-                        )}
-                    </ScrollBottomSheet>
+                                </ScrollView>
+                            {/* </ScrollView> */}
+                            
+                        </ScrollBottomSheet>
+                    )}
             </Body>
         </Container>
     );

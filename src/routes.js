@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Main from './pages/Main';
 import Deck from './pages/Deck';
 import Card from './pages/Card';
+import CardDetail from './pages/CardDetail';
 
 const AppStack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function Routes() {
                 <AppStack.Screen name="Main" component={Main} />
                 <AppStack.Screen name="Deck" component={Deck} />
                 <AppStack.Screen name="Card" component={Card} />
+                <AppStack.Screen name="CardDetail" component={CardDetail} />
             </AppStack.Navigator>
         </NavigationContainer>
     );
