@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TextInput, View, Text, TouchableOpacity, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import ScrollBottomSheet from 'react-native-scroll-bottom-sheet';
@@ -13,6 +13,7 @@ import { Container, Header, Body, List, CardInfo } from './styles';
 
 export default function Card() {
     const navigation = useNavigation();
+    const route = useRoute();
     const [cardName, setCardName] = useState('fallen');
     const [cards, setCards] = useState([]);
     const [cardInfo, setCardInfo] = useState(null);
@@ -20,7 +21,7 @@ export default function Card() {
     const bottomRef = useRef(null);
     const windowHeight = Dimensions.get('window').height;
 
-    console.log((windowHeight / 100) * 20);
+    const deckID = route.params?.deckID;
 
     useEffect(() => {
         if (cardInfo) {
@@ -36,11 +37,6 @@ export default function Card() {
         try {
 
             const response = await api.get(`cards/search?q=${cardName}`);
-            console.log('passou da request');
-            // const { id, artist, colors, name, image_uris, legalities } = response.data.data[0]
-            
-            // console.log(id, artist, colors, name, image_uris, legalities);
-
             if (response.data && response.data.data.length > 0) {
                 setCards(response.data.data.map(card => {
 
@@ -70,7 +66,7 @@ export default function Card() {
     }
 
     function selectCard(card) {
-        navigation.navigate('CardDetail', { card });
+        navigation.navigate('CardDetail', { card, deckID });
         // setCardInfo(card);
         // console.log(card);
         // bottomRef.current.snapTo(1);

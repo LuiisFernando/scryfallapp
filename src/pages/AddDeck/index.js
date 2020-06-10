@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { store } from '../../redux';
-import { insertCard, clearDeck } from '../../redux/modules/decks/actions';
+import { insertDeck, clearDeck } from '../../redux/modules/decks/actions';
 
 import logo from '../../assets/logo.png';
 import white from '../../assets/white.png';
@@ -26,7 +26,7 @@ export default function AddDeck() {
 
     const maxWidth = Dimensions.get('window').width;
 
-    const deckToEdit = route.params?.deck;
+    const deckToEdit = route.params?.deckID;
 
     useEffect(() => {
         let colorAvailable = [
@@ -90,7 +90,7 @@ export default function AddDeck() {
     }
 
     async function handleAdd() {
-
+        debugger
         const selectedColor = colors.find(x => x.selected);
 
         if (deckName && selectedColor) {
@@ -105,7 +105,7 @@ export default function AddDeck() {
                     cards: []
                 };
 
-                dispatch(insertCard(deckNew))
+                dispatch(insertDeck(deckNew))
 
                 setDeckname('');
                 

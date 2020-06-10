@@ -59,3 +59,16 @@ export const Legalities = styled.View`
 export const LegalitiesColumn = styled.View`
     flex-direction: column;
 `;
+
+export const AddNewCardButton = styled.TouchableOpacity`
+    margin: 10px 10px;
+    margin-bottom: 30px;
+    background-color: #000;
+    padding: 15px;
+`;
+
+export const AddNewCardButtonText = styled.Text`
+    color: #FFF;
+    font-weight: bold;
+    align-self: center;
+`;

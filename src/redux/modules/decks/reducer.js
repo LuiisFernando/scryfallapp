@@ -4,7 +4,8 @@ import {
     DECK_INSERT,
     DECK_DELETE,
     DECK_EDIT,
-    DECK_CLEAR
+    DECK_CLEAR,
+    CARD_INSERT
 } from '../../constant/index';
 
 const INITIAL_STATE = {
@@ -16,7 +17,12 @@ export default function decks(state = INITIAL_STATE, action) {
         switch(action.type) {
             case DECK_INSERT: {
                 draft.decks = draft.decks || [];
-                draft.decks.push(action.payload.card);
+                draft.decks.push(action.payload.deck);
+                break;
+            }
+            case CARD_INSERT: {
+                const deckToAddCard = draft.decks.find(x => x.id === action.payload.deckID);
+                deckToAddCard.cards.push(action.payload.card);
                 break;
             }
             case DECK_DELETE: {

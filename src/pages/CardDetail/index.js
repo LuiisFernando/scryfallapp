@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
 
 import logo from '../../assets/logo.png';
+
+import { insertCard } from '../../redux/modules/decks/actions';
 
 import { 
     Container,
@@ -16,17 +19,28 @@ import {
     TextsWrap,
     FlavorText,
     Legalities, 
-    LegalitiesColumn 
+    LegalitiesColumn,
+    AddNewCardButton,
+    AddNewCardButtonText
 } from './styles';
 
 export default function CardDetail() {
+    const dispatch = useDispatch();
     const navigation = useNavigation();
     const route = useRoute();
+
     const { card } = route.params;
+    const deckID = route.params?.deckID;
+
     console.log(card);
+    console.log(deckID);
 
     function navigateBack() {
         navigation.goBack();
+    }
+
+    function addCardOnDeck() {
+        dispatch(insertCard(card, deckID));
     }
 
     return (
@@ -74,9 +88,20 @@ export default function CardDetail() {
                             </LegalitiesColumn>
                             
                         </Legalities>
+                        {deckID && (
+                            <AddNewCardButton onPress={addCardOnDeck}>
+                                <AddNewCardButtonText>
+                                    Adicionar card ao deck
+                                </AddNewCardButtonText>
+                            </AddNewCardButton>
+                        )}
                         {card.image_uris.normal && (
                             <Image source={{ uri: card.image_uris.normal }} style={{ alignSelf: 'center', width: 388, height: 580, marginBottom: 50 }} />
                         )}
+                        
+                        
+                        
+                        
                     </View>
                 </ScrollView>
             </Body>

@@ -14,7 +14,9 @@ import {
     DeckColorImage,
     DeckColorName,
     DeckName,
-    Arrow
+    Arrow,
+    AddNewDeckButton,
+    AddNewDeckButtonText
 } from './styles';
 
 export default function Main() {
@@ -59,11 +61,16 @@ export default function Main() {
     }
     
     function goToEditDeck(deck) {
-        navigation.navigate('Deck', { deck });
+        navigation.navigate('Deck', { deckID: deck.id });
     }
 
     function goToAddCard() {
         navigation.navigate('Card');
+    }
+
+    function deleteDeck() {
+        const teste = decks.filter(x => x.id !== 1);
+        console.log(teste);
     }
 
     return (
@@ -93,6 +100,12 @@ export default function Main() {
                 Aqui você pode montar seu deck com as cartas que você quiser
             </Text>
 
+            <AddNewDeckButton onPress={goToAddDeck}>
+                <AddNewDeckButtonText>
+                    Adicionar deck
+                </AddNewDeckButtonText>
+            </AddNewDeckButton>
+
             <List
                 data={decks}
                 keyExtractor={deck => String(deck.id)}
@@ -112,12 +125,10 @@ export default function Main() {
                 )}
             />
 
-            <TouchableOpacity onPress={goToAddDeck}>
-                <Text>Adicionar deck</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={goToAddCard}>
+            
+            {/* <TouchableOpacity onPress={goToAddCard}>
                 <Text>Adicionar card</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </Container>
     );
 }

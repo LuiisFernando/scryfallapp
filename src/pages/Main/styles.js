@@ -15,7 +15,7 @@ export const Header = styled.View`
 `;
 
 export const List = styled.FlatList`
-    margin-top: 32px;
+    margin-top: 20px;
 `;
 
 export const Deck = styled.TouchableWithoutFeedback``;
@@ -51,4 +51,16 @@ export const DeckName = styled.Text`
 
 export const Arrow = styled(Icon)`
     padding-right: 40px;
+`;
+
+export const AddNewDeckButton = styled.TouchableOpacity`
+    margin-top: 30px;
+    background-color: #000;
+    padding: 15px;
+`;
+
+export const AddNewDeckButtonText = styled.Text`
+    color: #FFF;
+    font-weight: bold;
+    align-self: center;
 `;
