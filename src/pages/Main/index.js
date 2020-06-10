@@ -33,7 +33,7 @@ export default function Main() {
     }
 
     const totalDecks = useMemo(() => {
-        return decks.length
+        return decks ? decks.length : 0
     }, [decks]);
 
     const loadDeckCallback = useCallback(async () => {
