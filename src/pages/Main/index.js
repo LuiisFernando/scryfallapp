@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { Image, Text, Alert } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Image, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useStore } from 'react-redux';
+import { useStore, useDispatch } from 'react-redux';
+import { deleteDeck } from '../../redux/modules/decks/actions';
 import logo from '../../assets/logo.png';
 
 import { 
@@ -23,6 +24,7 @@ import {
 
 export default function Main() {
     const navigation = useNavigation();
+    const dispatch = useDispatch();
     const [decks, setDecks] = useState([]);
     const isFocused = useIsFocused();
     const store = useStore();
@@ -39,7 +41,7 @@ export default function Main() {
         return decks ? decks.length : 0
     }, [decks]);
 
-    const loadDeckCallback = useCallback(async () => {
+    async function loadDeckCallback() {
         try {
             var response = store.getState().decks;
             if (response) {
@@ -51,7 +53,7 @@ export default function Main() {
             Alert.alert('ops', 'Ocorreu um erro ao carregar os decks');
             console.log(err);
         }
-    }, []);
+    }
 
     useEffect(() => {
         if (isFocused) {
@@ -65,6 +67,25 @@ export default function Main() {
     
     function goToEditDeck(deck) {
         navigation.navigate('Deck', { deckID: deck.id });
+    }
+
+    function deleteDeckFromState(deck) {
+        const message = `Deseja deletar o deck ${deck.deckName} ?`;
+
+        Alert.alert('Deletar', message,
+            [
+                {
+                text: 'Não',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+                },
+                { text: 'Sim', onPress: () => {
+                    dispatch(deleteDeck(deck.id));
+                    loadDeckCallback();
+                } }
+            ],
+        { cancelable: false }
+        );
     }
 
     return (
@@ -97,7 +118,7 @@ export default function Main() {
                 onRefresh={() => {}}
                 refreshing={false}
                 renderItem={({ item: deck }) => (
-                    <Deck onPress={() => goToEditDeck(deck)}>
+                    <Deck onPress={() => goToEditDeck(deck)} onLongPress={() => deleteDeckFromState(deck)}>
                         <DeckContainer>
                             <DeckColorName>
                                 <DeckColorImage source={images[deck.color]} />

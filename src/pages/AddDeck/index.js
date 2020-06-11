@@ -90,7 +90,6 @@ export default function AddDeck() {
     }
 
     async function handleAdd() {
-        debugger
         const selectedColor = colors.find(x => x.selected);
 
         if (deckName && selectedColor) {

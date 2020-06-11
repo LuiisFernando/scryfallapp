@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
-import { useStore } from 'react-redux';
-// import { store } from '../../redux';
+import { useStore, useDispatch } from 'react-redux';
+import { deleteCard } from '../../redux/modules/decks/actions';
 import Icon from 'react-native-vector-icons/Feather';
 import logo from '../../assets/logo.png';
 
@@ -19,14 +19,20 @@ export default function Deck() {
     const navigation = useNavigation();
     const isFocused = useIsFocused();
     const store = useStore();
+    const dispatch = useDispatch();
     const [deck, setDeck] = useState(null);
     
     const deckID = route.params?.deckID;
 
-    const loadDeck = useCallback(async () => {
+    // const loadDeck = useCallback(async () => {
+    //     const deckFromState = store.getState().decks.decks.find(x => x.id === deckID);
+    //     setDeck(deckFromState);
+    // }, [deckID]);
+
+    function loadDeck() {
         const deckFromState = store.getState().decks.decks.find(x => x.id === deckID);
         setDeck(deckFromState);
-    }, [deckID]);
+    }
 
     useEffect(() => {
         loadDeck();
@@ -36,13 +42,15 @@ export default function Deck() {
         return deck ? deck.cards.length : 0
     }, [deck]);
 
-    const images = {
-        red: require('../../assets/red.png'),
-        green: require('../../assets/green.png'),
-        white: require('../../assets/white.png'),
-        black: require('../../assets/black.png'),
-        blue: require('../../assets/blue.png'),
-    }
+    const images = useMemo(() => {
+        return {
+            red: require('../../assets/red.png'),
+            green: require('../../assets/green.png'),
+            white: require('../../assets/white.png'),
+            black: require('../../assets/black.png'),
+            blue: require('../../assets/blue.png'),
+        };
+    }, []);
 
     function navigateBack() {
         navigation.goBack();
@@ -54,6 +62,24 @@ export default function Deck() {
 
     function navigateToCardDetail(card) {
         navigation.navigate('CardDetail', { card });
+    }
+
+    function deleteCardFromDeck(card) {
+        const message = `Deseja deletar ${card.name} do deck ${deck.deckName}`
+        Alert.alert('Deletar', message,
+            [
+                {
+                text: 'Não',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+                },
+                { text: 'Sim', onPress: () => {
+                    dispatch(deleteCard(card.id, deck.id));
+                    loadDeck();
+                } }
+            ],
+        { cancelable: false }
+        );
     }
 
     return (
@@ -92,7 +118,7 @@ export default function Deck() {
                                     showsVerticalScrollIndicator={false}
                                     keyExtractor={card => String(card.id)}
                                     renderItem={({ item: card }) => (
-                                        <TouchableWithoutFeedback onPress={() => navigateToCardDetail(card)}>
+                                        <TouchableWithoutFeedback onPress={() => navigateToCardDetail(card)} onLongPress={() => deleteCardFromDeck(card)}>
                                             <View style={{ flexDirection: 'column' , alignItems: 'center' }}>
                                                 <Image source={{ uri: card.image_uris.normal}} resizeMode="contain" style={{ width: 288, height: 410, }} />
                                                 <Text>{card.name}</Text>

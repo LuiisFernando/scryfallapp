@@ -22,17 +22,17 @@ export function insertDeck(deck) {
 }
 
 
-export function deleteCard(id) {
+export function deleteCard(cardID, deckID) {
     return {
         type: CARD_DELETE,
-        payload: { id }
+        payload: { cardID, deckID }
     };
 }
 
-export function deleteDeck(id) {
+export function deleteDeck(deckID) {
     return {
         type: DECK_DELETE,
-        payload: { id }
+        payload: { deckID }
     };
 }
 
