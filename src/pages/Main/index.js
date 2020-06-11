@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { Image, Text, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { store } from '../../redux';
+import { useStore } from 'react-redux';
 import logo from '../../assets/logo.png';
 
 import { 
     Container,
     Header,
+    CounterText,
+    WelcomeText,
+    PresentationText,
     List,
     Deck,
     DeckContainer,
@@ -23,7 +25,8 @@ export default function Main() {
     const navigation = useNavigation();
     const [decks, setDecks] = useState([]);
     const isFocused = useIsFocused();
-
+    const store = useStore();
+    
     const images = {
         red: require('../../assets/red.png'),
         green: require('../../assets/green.png'),
@@ -64,41 +67,22 @@ export default function Main() {
         navigation.navigate('Deck', { deckID: deck.id });
     }
 
-    function goToAddCard() {
-        navigation.navigate('Card');
-    }
-
-    function deleteDeck() {
-        const teste = decks.filter(x => x.id !== 1);
-        console.log(teste);
-    }
-
     return (
         <Container>
             <Header>
                 <Image source={logo} />
 
-                <Text style={{ fontSize: 15, color: '#737380' }}>
+                <CounterText>
                     Você tem {totalDecks} decks
-                </Text>
+                </CounterText>
             </Header>
 
-            <Text style={{ 
-                    fontSize: 30,
-                    marginBottom: 16,
-                    marginTop: 48,
-                    color: '#13131A',
-                    fontWeight: 'bold'
-                }}>
+            <WelcomeText>
                     Bem-vindo!
-            </Text>
-            <Text style={{
-                fontSize: 16,
-                lineHeight: 24,
-                color: '#737380'
-            }}>
+            </WelcomeText>
+            <PresentationText>
                 Aqui você pode montar seu deck com as cartas que você quiser
-            </Text>
+            </PresentationText>
 
             <AddNewDeckButton onPress={goToAddDeck}>
                 <AddNewDeckButtonText>
@@ -124,11 +108,6 @@ export default function Main() {
                     </Deck>
                 )}
             />
-
-            
-            {/* <TouchableOpacity onPress={goToAddCard}>
-                <Text>Adicionar card</Text>
-            </TouchableOpacity> */}
         </Container>
     );
 }

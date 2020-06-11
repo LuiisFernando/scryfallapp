@@ -16,6 +16,12 @@ export const Body = styled.View`
     flex: 1;
 `;
 
+export const Scroll = styled.ScrollView`
+    flex: 1;
+`;
+
+export const ScrollWrap = styled.View``;
+
 export const CardInfo = styled.View`
     flex: 1;
     padding: 0 10px;
@@ -59,6 +65,8 @@ export const Legalities = styled.View`
 export const LegalitiesColumn = styled.View`
     flex-direction: column;
 `;
+
+export const LegalitiesText = styled.Text``;
 
 export const AddNewCardButton = styled.TouchableOpacity`
     margin: 10px 10px;

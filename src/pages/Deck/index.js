@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
-import { store } from '../../redux';
+import { useStore } from 'react-redux';
+// import { store } from '../../redux';
 import Icon from 'react-native-vector-icons/Feather';
 import logo from '../../assets/logo.png';
 
@@ -17,18 +18,17 @@ export default function Deck() {
     const route = useRoute();
     const navigation = useNavigation();
     const isFocused = useIsFocused();
+    const store = useStore();
     const [deck, setDeck] = useState(null);
     
     const deckID = route.params?.deckID;
 
-    function loadDeck() {
+    const loadDeck = useCallback(async () => {
         const deckFromState = store.getState().decks.decks.find(x => x.id === deckID);
         setDeck(deckFromState);
-        console.log('deck do estado ', deckFromState);
-    }
+    }, [deckID]);
 
     useEffect(() => {
-        console.log('deck focado ', deckID);
         loadDeck();
     }, [isFocused]);
 

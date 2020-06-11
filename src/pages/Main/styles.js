@@ -14,6 +14,26 @@ export const Header = styled.View`
     padding: 10px 0;
 `;
 
+export const CounterText = styled.Text`
+    font-size: 15px;
+    color: #737380;
+`;
+
+export const WelcomeText = styled.Text`
+    font-size: 30px;
+    margin-bottom: 16px;
+    margin-top: 48px;
+    color: #13131A;
+    font-weight: bold;
+`;
+
+
+export const PresentationText = styled.Text`
+    font-size: 16px;
+    line-height: 24px;
+    color: #737380;
+`;
+
 export const List = styled.FlatList`
     margin-top: 20px;
 `;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
@@ -12,6 +12,8 @@ import {
     Container,
     Header,
     Body,
+    Scroll,
+    ScrollWrap,
     CardInfo,
     CardName,
     CardType,
@@ -20,6 +22,7 @@ import {
     FlavorText,
     Legalities, 
     LegalitiesColumn,
+    LegalitiesText,
     AddNewCardButton,
     AddNewCardButtonText
 } from './styles';
@@ -31,9 +34,6 @@ export default function CardDetail() {
 
     const { card } = route.params;
     const deckID = route.params?.deckID;
-
-    console.log(card);
-    console.log(deckID);
 
     function navigateBack() {
         navigation.goBack();
@@ -53,8 +53,8 @@ export default function CardDetail() {
                 </TouchableOpacity>
             </Header>
             <Body>
-                <ScrollView  style={{ flex: 1 }}>
-                    <View>
+                <Scroll>
+                    <ScrollWrap>
                         <CardInfo>
                             <CardName>{card.name}</CardName>
                             <CardType>{card.type}</CardType>
@@ -73,18 +73,18 @@ export default function CardDetail() {
                         </CardInfo>
                         <Legalities>
                             <LegalitiesColumn>
-                                <Text>Standard: {card.legalities.standard === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Pioneer: {card.legalities.pioneer === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Modern: {card.legalities.modern === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Legacy: {card.legalities.legacy === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Vintage: {card.legalities.vintage === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
+                                <LegalitiesText>Standard: {card.legalities.standard === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Pioneer: {card.legalities.pioneer === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Modern: {card.legalities.modern === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Legacy: {card.legalities.legacy === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Vintage: {card.legalities.vintage === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
                             </LegalitiesColumn>
                             <LegalitiesColumn>                        
-                                <Text>Brawl: {card.legalities.brawl === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Historic: {card.legalities.historic === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Pauper: {card.legalities.pauper === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Penny: {card.legalities.penny === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
-                                <Text>Commander: {card.legalities.commander === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</Text>
+                                <LegalitiesText>Brawl: {card.legalities.brawl === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Historic: {card.legalities.historic === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Pauper: {card.legalities.pauper === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Penny: {card.legalities.penny === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
+                                <LegalitiesText>Commander: {card.legalities.commander === 'legal' ? 'LEGAL' : 'NOT LEGAL'}</LegalitiesText>
                             </LegalitiesColumn>
                             
                         </Legalities>
@@ -98,12 +98,8 @@ export default function CardDetail() {
                         {card.image_uris.normal && (
                             <Image source={{ uri: card.image_uris.normal }} style={{ alignSelf: 'center', width: 388, height: 580, marginBottom: 50 }} />
                         )}
-                        
-                        
-                        
-                        
-                    </View>
-                </ScrollView>
+                    </ScrollWrap>
+                </Scroll>
             </Body>
         </Container>
     );
