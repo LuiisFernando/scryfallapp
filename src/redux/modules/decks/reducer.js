@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { original } from 'immer';
 
 import {
     DECK_INSERT,
@@ -21,6 +22,26 @@ export default function decks(state = INITIAL_STATE, action) {
                 draft.decks.push(action.payload.deck);
                 break;
             }
+            case DECK_DELETE: {
+                const decksWithDeletation = draft.decks.filter(x => x.id !== action.payload.deckID);
+                draft.decks = decksWithDeletation;
+                break;
+            }
+            case DECK_CLEAR: {
+                draft.decks = [];
+                break;
+            }
+            case DECK_EDIT: {
+                const deckToEdit = draft.decks.find(x => x.id === action.payload.id);
+                const deckToEditIndex = draft.decks.findIndex(x => x.id === action.payload.id);
+
+                deckToEdit.deckName = action.payload.name;
+
+                draft.decks[deckToEditIndex] = deckToEdit;
+                console.log(original(state.decks));
+                console.log('deck editado', draft.decks[deckToEditIndex], action.payload.id);
+                break;
+            }
             case CARD_INSERT: {
                 const deckToAddCard = draft.decks.find(x => x.id === action.payload.deckID);
                 deckToAddCard.cards.push(action.payload.card);
@@ -33,15 +54,6 @@ export default function decks(state = INITIAL_STATE, action) {
                 
                 deckToDeleteCard.cards = deckToDeleteCard.cards.filter(x => x.id !== action.payload.cardID);
                 draft.decks[deckToDeleteCardIndex] = deckToDeleteCard;
-                break;
-            }
-            case DECK_DELETE: {
-                const decksWithDeletation = draft.decks.filter(x => x.id !== action.payload.deckID);
-                draft.decks = decksWithDeletation;
-                break;
-            }
-            case DECK_CLEAR: {
-                draft.decks = [];
                 break;
             }
             default:

@@ -36,10 +36,10 @@ export function deleteDeck(deckID) {
     };
 }
 
-export function editDeck(name, color) {
+export function editDeck(id, name) {
     return {
         type: DECK_EDIT,
-        payload: { name, color }
+        payload: { id, name }
     };
 }
 

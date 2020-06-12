@@ -11,7 +11,10 @@ import {
     Header,
     Body,
     AddNewCardButton,
-    AddNewCardButtonText
+    AddNewCardButtonText,
+    CardName,
+    CardContainer,
+    CardImage
 } from './styles';
 
 export default function Deck() {
@@ -64,6 +67,10 @@ export default function Deck() {
         navigation.navigate('CardDetail', { card });
     }
 
+    function navigateToEditDeck() {
+        navigation.navigate('AddDeck', { deckID: deck.id });
+    }
+
     function deleteCardFromDeck(card) {
         const message = `Deseja deletar ${card.name} do deck ${deck.deckName}`
         Alert.alert('Deletar', message,
@@ -96,7 +103,10 @@ export default function Deck() {
                     <>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <Image source={images[deck.color]} style={{ width: 100, height: 100 }} />
-                            <Text style={{ marginLeft: 20, fontWeight: 'bold', fontSize: 20 }}>{deck.deckName}</Text>
+                            <Text numberOfLines={1} style={{ marginLeft: 20, fontWeight: 'bold', fontSize: 30, maxWidth: 150 }}>{deck.deckName}</Text>
+                            <TouchableOpacity onPress={navigateToEditDeck} style={{ marginLeft: 50 }}>
+                                <Icon name="edit-3" size={25} color="gray" />
+                            </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 30 }}>
                             {totalCards > 0 ? (
@@ -119,10 +129,10 @@ export default function Deck() {
                                     keyExtractor={card => String(card.id)}
                                     renderItem={({ item: card }) => (
                                         <TouchableWithoutFeedback onPress={() => navigateToCardDetail(card)} onLongPress={() => deleteCardFromDeck(card)}>
-                                            <View style={{ flexDirection: 'column' , alignItems: 'center' }}>
-                                                <Image source={{ uri: card.image_uris.normal}} resizeMode="contain" style={{ width: 288, height: 410, }} />
-                                                <Text>{card.name}</Text>
-                                            </View>
+                                            <CardContainer>
+                                                <CardName>{card.name}</CardName>
+                                                <CardImage source={{ uri: card.image_uris.normal}} resizeMode="contain" />
+                                            </CardContainer>
                                         </TouchableWithoutFeedback>
                                     )}
                                 />

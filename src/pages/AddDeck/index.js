@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Image, TouchableOpacity, View, TextInput, Alert, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { store } from '../../redux';
-import { insertDeck, clearDeck } from '../../redux/modules/decks/actions';
+import { insertDeck, editDeck, clearDeck } from '../../redux/modules/decks/actions';
 
 import logo from '../../assets/logo.png';
 import white from '../../assets/white.png';
@@ -20,6 +20,7 @@ import { Container, Header, Body, List, Cor, CorView, AddButton, AddButtonText, 
 export default function AddDeck() {
     const navigation = useNavigation();
     const route = useRoute();
+    const store = useStore();
     const dispatch = useDispatch();
     const [deckName, setDeckname] = useState('');
     const [colors, setColors] = useState();
@@ -27,7 +28,7 @@ export default function AddDeck() {
     const maxWidth = Dimensions.get('window').width;
 
     const deckToEdit = route.params?.deckID;
-
+    
     useEffect(() => {
         let colorAvailable = [
             {
@@ -58,11 +59,13 @@ export default function AddDeck() {
         ];
 
         if (deckToEdit) {
-            setDeckname(deckToEdit.deckName);
+            const deck = store.getState().decks.decks.find(x => x.id === deckToEdit);
+            console.log('deck p editar ', deck);
+            setDeckname(deck.deckName);
             colorAvailable = colorAvailable.map(color => {
                 return {
                     ...color,
-                    selected: color.id === deckToEdit.color
+                    selected: color.id === deck.color
                 };
             })
         }
@@ -123,11 +126,12 @@ export default function AddDeck() {
     }
 
     async function handleEdit() {
-        
+        if (deckName && deckToEdit) {
+            dispatch(editDeck(deckToEdit, deckName));
+        }
     }
 
     async function limparMemoria() {
-        AsyncStorage.clear();
         dispatch(clearDeck());
     }
 
@@ -172,11 +176,19 @@ export default function AddDeck() {
                 )}
             </View>
             <View style={{ marginTop: 50 }}>
-                <AddButton onPress={handleAdd}>
-                    <AddButtonText>
-                        Adicionar
-                    </AddButtonText>
-                </AddButton>
+                {!deckToEdit ? (
+                    <AddButton onPress={handleAdd}>
+                        <AddButtonText>
+                            Adicionar
+                        </AddButtonText>
+                    </AddButton>
+                ) : (
+                    <AddButton onPress={handleEdit}>
+                        <AddButtonText>
+                            Editar
+                        </AddButtonText>
+                    </AddButton>
+                )}
                 <AddButton onPress={limparMemoria} style={{ marginTop: 50}}>
                     <AddButtonText>
                         limpar memoria
