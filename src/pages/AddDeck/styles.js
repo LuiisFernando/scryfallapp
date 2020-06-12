@@ -41,7 +41,7 @@ export const AddButton = styled.TouchableOpacity`
     align-items: center;
     height: 44px;
     align-self: stretch;
-    margin: 0 10px;
+    margin: 50px 10px;
 `;
 
 export const AddButtonText = styled.Text`

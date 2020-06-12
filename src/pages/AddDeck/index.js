@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Image, TouchableOpacity, View, TextInput, Alert, Dimensions } from 'react-native';
+import { Image, TouchableOpacity, View, TextInput, Alert, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch, useStore } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-community/async-storage';
 
-import { store } from '../../redux';
 import { insertDeck, editDeck, clearDeck } from '../../redux/modules/decks/actions';
 
 import logo from '../../assets/logo.png';
@@ -15,7 +13,17 @@ import blue from '../../assets/blue.png';
 import red from '../../assets/red.png';
 import green from '../../assets/green.png';
 
-import { Container, Header, Body, List, Cor, CorView, AddButton, AddButtonText, CorImg } from './styles';
+import { 
+    Container,
+    Header,
+    Body,
+    List,
+    Cor,
+    CorView,
+    AddButton,
+    AddButtonText,
+    CorImg 
+} from './styles';
 
 export default function AddDeck() {
     const navigation = useNavigation();
@@ -25,34 +33,45 @@ export default function AddDeck() {
     const [deckName, setDeckname] = useState('');
     const [colors, setColors] = useState();
 
-    const maxWidth = Dimensions.get('window').width;
-
     const deckToEdit = route.params?.deckID;
     
+    const images = {
+        red: require('../../assets/red.png'),
+        green: require('../../assets/green.png'),
+        white: require('../../assets/white.png'),
+        black: require('../../assets/black.png'),
+        blue: require('../../assets/blue.png'),
+    }
+
     useEffect(() => {
         let colorAvailable = [
             {
-                id: 'black',
+                id: 1,
+                name: 'black',
                 image: black,
                 selected: false
             },
             {
-                id: 'white',
+                id: 2,
+                name: 'white',
                 image: white,
                 selected: false
             },
             {
-                id: 'blue',
+                id: 3,
+                name: 'blue',
                 image: blue,
                 selected: false
             },
             {
-                id: 'red',
+                id: 4,
+                name: 'red',
                 image: red,
                 selected: false
             },
             {
-                id: 'green',
+                id: 5,
+                name: 'green',
                 image: green,
                 selected: false
             }
@@ -103,7 +122,7 @@ export default function AddDeck() {
                 const deckNew = {
                     id,
                     deckName,
-                    color: selectedColor.id,
+                    color: selectedColor.name,
                     cards: []
                 };
 
@@ -147,35 +166,57 @@ export default function AddDeck() {
 
 
         <Body>
-            <View>
-                <TextInput 
-                    style={{
-                        backgroundColor: 'white',
-                        paddingHorizontal: 30,
-                        marginHorizontal: 20,
-                        borderRadius: 25
-                    }}
-                    placeholder="Nome do deck"
-                    value={deckName} 
-                    onChangeText={setDeckname} />
+            <View style={{ flex: 1 }}>
+                <View>
+                    <TextInput 
+                        style={{
+                            backgroundColor: 'white',
+                            paddingHorizontal: 30,
+                            marginHorizontal: 20,
+                            borderRadius: 25,
+                        }}
+                        placeholder="Nome do deck"
+                        value={deckName} 
+                        onChangeText={setDeckname} />
+                </View>
                 
-                {colors && (
-                    <List
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        data={colors}
-                        keyExtractor={img => String(img.id)}
-                        renderItem={({ item: color }) => (
-                            <Cor onPress={() => selectColor(color)}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', paddingTop: 100, alignItems: 'center', justifyContent: 'center',  maxWidth: 300 }}>
+                        {colors && colors.map(color => (
+                            <TouchableWithoutFeedback onPress={() => selectColor(color)} key={color.id}>
                                 <CorView selecionado={color.selected}>
-                                    <CorImg source={color.image} />
+                                    <Image source={color.image} style={{ width: 100, height: 100 }} />
                                 </CorView>
-                            </Cor>
-                        )}
-                    />
-                )}
-            </View>
-            <View style={{ marginTop: 50 }}>
+                            </TouchableWithoutFeedback>
+                        ))}
+                        {/* <TouchableWithoutFeedback>
+                            <CorView>
+                                <Image source={images.red} style={{ width: 100, height: 100 }} />
+                            </CorView>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <CorView selecionado={true}>
+                                <Image source={images.green} style={{ width: 100, height: 100 }} />
+                            </CorView>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <CorView>
+                                <Image source={images.blue} style={{ width: 100, height: 100 }} />
+                            </CorView>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <CorView>
+                                <Image source={images.white} style={{ width: 100, height: 100 }} />
+                            </CorView>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <CorView>
+                                <Image source={images.black} style={{ width: 100, height: 100 }} />
+                            </CorView>
+                        </TouchableWithoutFeedback> */}
+                    </View>
+                </View>
+
                 {!deckToEdit ? (
                     <AddButton onPress={handleAdd}>
                         <AddButtonText>
@@ -189,12 +230,24 @@ export default function AddDeck() {
                         </AddButtonText>
                     </AddButton>
                 )}
-                <AddButton onPress={limparMemoria} style={{ marginTop: 50}}>
-                    <AddButtonText>
-                        limpar memoria
-                    </AddButtonText>
-                </AddButton>
+
+                {/* {colors && (
+                    <List
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        data={colors}
+                        keyExtractor={img => String(img.id)}
+                        renderItem={({ item: color }) => (
+                            <Cor onPress={() => selectColor(color)}>
+                                <CorView selecionado={color.selected}>
+                                    <CorImg source={color.image} />
+                                </CorView>
+                            </Cor>
+                        )}
+                    />
+                )} */}
             </View>
+
             
         </Body>
     </Container>

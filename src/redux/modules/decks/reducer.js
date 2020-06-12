@@ -44,7 +44,10 @@ export default function decks(state = INITIAL_STATE, action) {
             }
             case CARD_INSERT: {
                 const deckToAddCard = draft.decks.find(x => x.id === action.payload.deckID);
-                deckToAddCard.cards.push(action.payload.card);
+                // deckToAddCard.cards.push(action.payload.card);
+                const cards = deckToAddCard.cards;
+                const teste = [{...action.payload.card}, ...cards];
+                deckToAddCard.cards = teste;
                 break;
             }
             case CARD_DELETE: {
