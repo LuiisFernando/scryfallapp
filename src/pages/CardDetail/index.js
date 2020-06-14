@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch, useStore } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
 import { SvgCssUri } from 'react-native-svg';
-
+import reactStringReplace from 'react-string-replace';
 import logo from '../../assets/logo.png';
 
 import { insertCard } from '../../redux/modules/decks/actions';
@@ -57,6 +57,54 @@ export default function CardDetail() {
     }
 
 
+    function getOracleText(oracle_text) {
+
+        const symbology = store.getState().symbology.symbols;
+        console.log('oracle text >>> ', oracle_text);
+
+        const listaSimbolos = new Array();
+
+        symbology.map(symbol => {
+            
+            var teste = oracle_text.indexOf(symbol.symbol);
+            if (teste > -1) {
+                listaSimbolos.push(symbol);
+            }
+
+        });
+    
+        let textoFormatado = oracle_text;
+
+        let testeString = null;
+        listaSimbolos.map((symb, index) => {
+            let teste = index === 0 ? "20" : "100";
+
+            testeString = reactStringReplace(textoFormatado, symb.symbol, (match, i) => (
+                <SvgCssUri style={{ marginLeft: 20 }} key={index} uri={symb.image} width="20" height="20" />
+            ));
+
+            textoFormatado = testeString;
+        });
+
+
+        // let arrayHtml = new Array(testeString.length);
+
+        // if (testeString && testeString.length > 0) {
+
+        //     for (let i = 0; i < testeString.length; i++) {
+        //         if (Object.prototype.toString.call(testeString[i]) === '[object Object]') {
+        //             arrayHtml[i] = testeString[i];
+        //         } else {
+        //             arrayHtml[i] = <Text>{testeString[i]}</Text>
+        //         }
+                
+        //     }
+        //     console.log(arrayHtml);
+        // }
+
+        return <InfoText>{textoFormatado}</InfoText>;
+    }
+
     return (
         <Container>
             <Header>
@@ -73,7 +121,8 @@ export default function CardDetail() {
                             <CardInfo>
                                 <CardName>{card.name}</CardName>
                                 <CardType>{card.type}</CardType>
-                                <InfoText>{card.oracle_text}</InfoText>
+                                {/* <InfoText>{card.oracle_text}</InfoText> */}
+                                {getOracleText(card.oracle_text)}
                                 {card.flavor_text && (
                                     <TextsWrap>
                                         <FlavorText>{card.flavor_text}</FlavorText>
