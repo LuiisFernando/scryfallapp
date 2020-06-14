@@ -40,7 +40,7 @@ export default function Main() {
 
     function loadSymbol() {
         const symbology = store.getState().symbology;
-        console.log(symbology);
+
         if (!symbology || symbology.symbols.length === 0) {
             dispatch(loadSymbols());
         }
@@ -60,7 +60,6 @@ export default function Main() {
             if (response) {
                 setDecks([]);
                 setDecks(response.decks);
-                console.log('decks > ', response.decks);
             }
         } catch (err) {
             Alert.alert('ops', 'Ocorreu um erro ao carregar os decks');

@@ -60,47 +60,24 @@ export default function CardDetail() {
     function getOracleText(oracle_text) {
 
         const symbology = store.getState().symbology.symbols;
-        console.log('oracle text >>> ', oracle_text);
 
         const listaSimbolos = new Array();
 
         symbology.map(symbol => {
-            
-            var teste = oracle_text.indexOf(symbol.symbol);
-            if (teste > -1) {
+            if (oracle_text.indexOf(symbol.symbol) > -1) {
                 listaSimbolos.push(symbol);
             }
-
         });
     
         let textoFormatado = oracle_text;
 
         let testeString = null;
         listaSimbolos.map((symb, index) => {
-            let teste = index === 0 ? "20" : "100";
-
             testeString = reactStringReplace(textoFormatado, symb.symbol, (match, i) => (
-                <SvgCssUri style={{ marginLeft: 20 }} key={index} uri={symb.image} width="20" height="20" />
+                <SvgCssUri  key={`${symb.symbol}${index}`} uri={symb.image} width="20" height="20" />
             ));
-
             textoFormatado = testeString;
         });
-
-
-        // let arrayHtml = new Array(testeString.length);
-
-        // if (testeString && testeString.length > 0) {
-
-        //     for (let i = 0; i < testeString.length; i++) {
-        //         if (Object.prototype.toString.call(testeString[i]) === '[object Object]') {
-        //             arrayHtml[i] = testeString[i];
-        //         } else {
-        //             arrayHtml[i] = <Text>{testeString[i]}</Text>
-        //         }
-                
-        //     }
-        //     console.log(arrayHtml);
-        // }
 
         return <InfoText>{textoFormatado}</InfoText>;
     }

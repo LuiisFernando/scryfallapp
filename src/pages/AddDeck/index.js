@@ -80,7 +80,7 @@ export default function AddDeck() {
 
         if (deckToEdit) {
             const deck = store.getState().decks.decks.find(x => x.id === deckToEdit);
-            console.log('deck p editar ', deck);
+
             setDeckname(deck.deckName);
             colorAvailable = colorAvailable.map(color => {
                 return {
@@ -99,7 +99,6 @@ export default function AddDeck() {
     }
 
     function selectColor(color) {
-        console.log(color);
         const coresNova = colors.map(cor => {
             return {
                 ...cor,
