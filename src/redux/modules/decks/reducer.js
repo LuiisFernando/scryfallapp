@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { original } from 'immer';
 
 import {
     DECK_INSERT,
@@ -38,7 +37,7 @@ export default function decks(state = INITIAL_STATE, action) {
                 deckToEdit.deckName = action.payload.name;
 
                 draft.decks[deckToEditIndex] = deckToEdit;
-                console.log(original(state.decks));
+
                 console.log('deck editado', draft.decks[deckToEditIndex], action.payload.id);
                 break;
             }

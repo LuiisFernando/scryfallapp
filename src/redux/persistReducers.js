@@ -7,7 +7,7 @@ export default reducers => {
     {
       key: 'scryfallapp',
       storage: AsyncStorage,
-      whitelist: ['decks'],
+      whitelist: ['decks', 'symbology'],
     },
     reducers,
   );

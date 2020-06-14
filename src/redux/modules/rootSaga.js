@@ -1,7 +1,7 @@
 import { all } from 'redux-saga/effects';
 
-import decks from './decks/saga';
+import symbology from './symbology/saga'
 
 export default function* rootSaga() {
-    return yield all([decks]);
+    return yield all([symbology]);
 }

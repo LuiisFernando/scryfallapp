@@ -5,6 +5,7 @@ import { useDispatch, useStore } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { insertDeck, editDeck, clearDeck } from '../../redux/modules/decks/actions';
+import { clearSymbols } from '../../redux/modules/symbology/actions';
 
 import logo from '../../assets/logo.png';
 import white from '../../assets/white.png';
@@ -136,7 +137,7 @@ export default function AddDeck() {
                         selected: false
                     };
                 }));
-                
+                navigateBack();
             } catch (err) {
                 Alert.alert('ops', 'ocorreu um erro');
                 console.log(err);
@@ -147,10 +148,12 @@ export default function AddDeck() {
     async function handleEdit() {
         if (deckName && deckToEdit) {
             dispatch(editDeck(deckToEdit, deckName));
+            navigateBack();
         }
     }
 
     async function limparMemoria() {
+        dispatch(clearSymbols());
         dispatch(clearDeck());
     }
 

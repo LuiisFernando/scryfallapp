@@ -2,7 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Image, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useStore, useDispatch } from 'react-redux';
-import { deleteDeck } from '../../redux/modules/decks/actions';
+import { deleteDeck, clearDeck } from '../../redux/modules/decks/actions';
+import { loadSymbols } from '../../redux/modules/symbology/actions';
 import logo from '../../assets/logo.png';
 
 import { 
@@ -36,6 +37,18 @@ export default function Main() {
         black: require('../../assets/black.png'),
         blue: require('../../assets/blue.png'),
     }
+
+    function loadSymbol() {
+        const symbology = store.getState().symbology;
+        console.log(symbology);
+        if (!symbology || symbology.symbols.length === 0) {
+            dispatch(loadSymbols());
+        }
+    }
+
+    useEffect(() => {
+        loadSymbol();
+    }, []);
 
     const totalDecks = useMemo(() => {
         return decks ? decks.length : 0

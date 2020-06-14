@@ -23,7 +23,7 @@ import {
 export default function Card() {
     const navigation = useNavigation();
     const route = useRoute();
-    const [cardName, setCardName] = useState('');
+    const [cardName, setCardName] = useState('akroma');
     const [cards, setCards] = useState([]);
 
     const deckID = route.params?.deckID;
