@@ -13,9 +13,41 @@ export const Header = styled.View`
     padding: 10px 0;
 `;
 
+export const PresentationText = styled.Text`
+    margin-left: 20px;
+    font-weight: bold;
+    font-size: 30px;
+    max-width: 150px;
+`;
+
+export const DeleteText = styled.Text`
+    margin-top: 20px;
+    color: red;
+    font-size: 12px;
+`;
+
+export const ColorDeckImage = styled.Image`
+    width: 100px;
+    height: 100px;
+`;
+
 export const Body = styled.View`
     flex: 1;
     max-width: 411px;
+`;
+
+export const DeckInfoContainer = styled.View`
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+export const InfoContainer = styled.View`
+    margin-top: 30px;
+`;
+
+export const CardListContainer = styled.View`
+    flex: 1;
 `;
 
 export const AddNewCardButton = styled.TouchableOpacity`

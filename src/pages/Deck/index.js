@@ -9,7 +9,13 @@ import logo from '../../assets/logo.png';
 import {
     Container,
     Header,
+    PresentationText,
+    DeleteText,
+    ColorDeckImage,
     Body,
+    DeckInfoContainer,
+    InfoContainer,
+    CardListContainer,
     AddNewCardButton,
     AddNewCardButtonText,
     CardName,
@@ -101,26 +107,31 @@ export default function Deck() {
             <Body>
                 {deck && (
                     <>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <Image source={images[deck.color]} style={{ width: 100, height: 100 }} />
-                            <Text numberOfLines={1} style={{ marginLeft: 20, fontWeight: 'bold', fontSize: 30, maxWidth: 150 }}>{deck.deckName}</Text>
+                        <DeckInfoContainer>
+                            <ColorDeckImage source={images[deck.color]} />
+                            <PresentationText numberOfLines={1}>
+                                {deck.deckName}
+                            </PresentationText>
                             <TouchableOpacity onPress={navigateToEditDeck} style={{ marginLeft: 50 }}>
                                 <Icon name="edit-3" size={25} color="gray" />
                             </TouchableOpacity>
-                        </View>
-                        <View style={{ marginTop: 30 }}>
+                        </DeckInfoContainer>
+                        <InfoContainer>
                             {totalCards > 0 ? (
                                 <Text>Existem {totalCards} cartas nesse deck, você pode adicionar quantas quiser ;)</Text>
                             ) : (
                                 <Text>Tá esperando o que para adicionar cartas no seu deck ? ;D</Text>
                             ) }
+                            <DeleteText>
+                                * Para deletar uma carta, segure o dedo no deck por 5 segundos
+                            </DeleteText>
                             <AddNewCardButton onPress={navigatoToAddCards}>
                                 <AddNewCardButtonText>
                                     Adicionar card
                                 </AddNewCardButtonText>
                             </AddNewCardButton>
-                        </View>
-                        <View style={{ flex: 1}}>
+                        </InfoContainer>
+                        <CardListContainer>
                             {deck.cards && deck.cards.length > 0 && (
                                 <FlatList
                                     style={{ flex: 1 }}
@@ -137,7 +148,7 @@ export default function Deck() {
                                     )}
                                 />
                             )}
-                        </View>
+                        </CardListContainer>
                     </>
                 )}
             </Body>

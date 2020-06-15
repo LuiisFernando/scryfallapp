@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Image, Alert } from 'react-native';
+import { Image, Alert, Text } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useStore, useDispatch } from 'react-redux';
 import { deleteDeck, clearDeck } from '../../redux/modules/decks/actions';
@@ -12,6 +12,7 @@ import {
     CounterText,
     WelcomeText,
     PresentationText,
+    DeleteText,
     List,
     Deck,
     DeckContainer,
@@ -116,6 +117,9 @@ export default function Main() {
             <PresentationText>
                 Aqui você pode montar seu deck com as cartas que você quiser
             </PresentationText>
+            <DeleteText>
+                * Para deletar um deck, segure o dedo no deck por 5 segundos
+            </DeleteText>
 
             <AddNewDeckButton onPress={goToAddDeck}>
                 <AddNewDeckButtonText>

@@ -34,6 +34,12 @@ export const PresentationText = styled.Text`
     color: #737380;
 `;
 
+export const DeleteText = styled.Text`
+    margin-top: 20px;
+    color: red;
+    font-size: 12px;
+`;
+
 export const List = styled.FlatList`
     margin-top: 20px;
 `;
