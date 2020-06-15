@@ -32,7 +32,7 @@ export const SearchInput = styled.TextInput`
     margin: 0 10px;
     border-radius: 25px;
     width: 80%;
-    height: 40px;
+    height: 45px;
 `;
 
 export const ListContainer = styled.View`

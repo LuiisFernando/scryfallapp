@@ -18,12 +18,13 @@ import {
     Container,
     Header,
     Body,
-    List,
-    Cor,
-    CorView,
+    ColorView,
     AddButton,
     AddButtonText,
-    CorImg 
+    ColorContainer,
+    ColorContent,
+    ColorImg,
+    Input
 } from './styles';
 
 export default function AddDeck() {
@@ -158,100 +159,55 @@ export default function AddDeck() {
 
     return (
         <Container>
-        <Header>
-            <Image source={logo} />
+            <Header>
+                <Image source={logo} />
 
-            <TouchableOpacity onPress={navigateBack}>
-                <Icon name="arrow-left" size={28} color="gray" />
-            </TouchableOpacity>
-        </Header>
+                <TouchableOpacity onPress={navigateBack}>
+                    <Icon name="arrow-left" size={28} color="gray" />
+                </TouchableOpacity>
+            </Header>
 
-
-        <Body>
-            <View style={{ flex: 1 }}>
-                <View>
-                    <TextInput 
-                        style={{
-                            backgroundColor: 'white',
-                            paddingHorizontal: 30,
-                            marginHorizontal: 20,
-                            borderRadius: 25,
-                        }}
-                        placeholder="Nome do deck"
-                        value={deckName} 
-                        onChangeText={setDeckname} />
-                </View>
-                
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', paddingTop: 100, alignItems: 'center', justifyContent: 'center',  maxWidth: 300 }}>
-                        {colors && colors.map(color => (
-                            <TouchableWithoutFeedback onPress={() => selectColor(color)} key={color.id}>
-                                <CorView selecionado={color.selected}>
-                                    <Image source={color.image} style={{ width: 100, height: 100 }} />
-                                </CorView>
-                            </TouchableWithoutFeedback>
-                        ))}
-                        {/* <TouchableWithoutFeedback>
-                            <CorView>
-                                <Image source={images.red} style={{ width: 100, height: 100 }} />
-                            </CorView>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback>
-                            <CorView selecionado={true}>
-                                <Image source={images.green} style={{ width: 100, height: 100 }} />
-                            </CorView>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback>
-                            <CorView>
-                                <Image source={images.blue} style={{ width: 100, height: 100 }} />
-                            </CorView>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback>
-                            <CorView>
-                                <Image source={images.white} style={{ width: 100, height: 100 }} />
-                            </CorView>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback>
-                            <CorView>
-                                <Image source={images.black} style={{ width: 100, height: 100 }} />
-                            </CorView>
-                        </TouchableWithoutFeedback> */}
+            <Body>
+                <View style={{ flex: 1 }}>
+                    <View>
+                        <Input
+                            placeholder="Nome do deck"
+                            value={deckName} 
+                            onChangeText={setDeckname} />
                     </View>
+                    
+                    {!deckToEdit && (
+                        <ColorContainer>
+                            <ColorContent>
+                                {colors && colors.map(color => (
+                                    <TouchableWithoutFeedback onPress={() => selectColor(color)} key={color.id}>
+                                        <ColorView selecionado={color.selected}>
+                                            <ColorImg source={color.image} />
+                                        </ColorView>
+                                    </TouchableWithoutFeedback>
+                                ))}
+                            </ColorContent>
+                        </ColorContainer>
+                    )}
+
+                    {!deckToEdit ? (
+                        <AddButton onPress={handleAdd}>
+                            <AddButtonText>
+                                Adicionar
+                            </AddButtonText>
+                        </AddButton>
+                    ) : (
+                        <AddButton onPress={handleEdit}>
+                            <AddButtonText>
+                                Editar
+                            </AddButtonText>
+                        </AddButton>
+                    )}
+
                 </View>
 
-                {!deckToEdit ? (
-                    <AddButton onPress={handleAdd}>
-                        <AddButtonText>
-                            Adicionar
-                        </AddButtonText>
-                    </AddButton>
-                ) : (
-                    <AddButton onPress={handleEdit}>
-                        <AddButtonText>
-                            Editar
-                        </AddButtonText>
-                    </AddButton>
-                )}
-
-                {/* {colors && (
-                    <List
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        data={colors}
-                        keyExtractor={img => String(img.id)}
-                        renderItem={({ item: color }) => (
-                            <Cor onPress={() => selectColor(color)}>
-                                <CorView selecionado={color.selected}>
-                                    <CorImg source={color.image} />
-                                </CorView>
-                            </Cor>
-                        )}
-                    />
-                )} */}
-            </View>
-
-            
-        </Body>
+                
+            </Body>
     </Container>
     );
 }

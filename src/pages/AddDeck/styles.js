@@ -16,23 +16,30 @@ export const Body = styled.View`
     flex: 1;
 `;
 
-export const List = styled.FlatList`
-    margin-top: 50px;
-    max-height: 200px;
+export const ColorContainer = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
 `;
 
-export const Cor = styled.TouchableWithoutFeedback`
-    margin-right: 15px;
+export const ColorContent = styled.View`
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 100px;
+    align-items: center;
+    justify-content: center;
+    max-width: 300px;
 `;
 
-export const CorView = styled.View`
+export const ColorView = styled.View`
     flex-direction: row;
     background-color: ${props => (props.selecionado ? 'gray' : 'transparent') };
 `;
 
-export const CorImg = styled.Image`
-    width: 150px;
-    height: 150px;
+export const ColorImg = styled.Image`
+    width: 100px;
+    height: 100px;
 `;
 
 export const AddButton = styled.TouchableOpacity`
@@ -48,4 +55,12 @@ export const AddButtonText = styled.Text`
     color: #FFF;
     font-weight: bold;
     font-size: 18px;
+`;
+
+export const Input = styled.TextInput`
+    background-color: white;
+    padding: 0 30px;
+    margin: 0 20px;
+    border-radius: 25px;
+    height: 45px;
 `;

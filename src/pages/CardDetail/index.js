@@ -98,7 +98,6 @@ export default function CardDetail() {
                             <CardInfo>
                                 <CardName>{card.name}</CardName>
                                 <CardType>{card.type}</CardType>
-                                {/* <InfoText>{card.oracle_text}</InfoText> */}
                                 {getOracleText(card.oracle_text)}
                                 {card.flavor_text && (
                                     <TextsWrap>
